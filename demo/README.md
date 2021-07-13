@@ -62,6 +62,18 @@
 - 对比Java
 - 字节码分析
 
+## Kotlin编译器使用与反编译
+
+1. 下载 Kotlin 编译器：[kotlin-compiler-1.5.20.zip](https://github.com/JetBrains/kotlin/releases/tag/v1.5.20)
+2. 配置环境变量 PATH
+3. 编写Kotlin文件 HelloWorld.kt
+4. 编译 `# kotlinc HelloWorld.kt`
+5. 运行 `# kotlin HelloWorldKt`
+6. 反编译 `# javap HelloWorldKt.class` or `# javap -c HelloKotlinKt.class`
+
+- 生成jar包：`# kotlinc HelloWorld.kt -include-runtime -d HelloWorld.jar`
+- 运行jar包：`# java -jar HelloWorld.jar`
+
 ## 目录
 
 1. Kotlin 介绍——开发环境搭建
