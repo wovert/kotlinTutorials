@@ -1,9 +1,28 @@
 fun main(args: Array<String>) {
-    var c0 = intArrayOf(1,2,3,4,5)
-    var c1 = IntArray(5){it + 10}
+    // 声明整型数组
+    var c0: IntArray = intArrayOf(1,2,3,4,5)
+
+    // 遍历数组
     for (e in c0) {
         println(e)
     }
+    println("-----")
+
+    // 遍历数组索引
+    for (i in c0.indices) {
+        println("c0[$i] = ${c0[i]}")
+    }
+    println("-----")
+
+    // 遍历数组索引和元素
+    for ((i, e) in c0.withIndex()) {
+        println("c0[$i] = ${e}")
+    }
+    println("-----")
+
+
+    var c1 = IntArray(5){it + 10}
+
     for (e in c1) {
         println(e)
     }
