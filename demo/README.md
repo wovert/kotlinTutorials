@@ -479,6 +479,105 @@ private  | OK, 文件 | OK，文件 | OK, 类
 
 直观的江，一个**JAR包，一个aar**
 
+## 表达式
+
+### 中缀表达式
+
+- 只有一个参数，且用infix 修饰的函数
+
+```
+class Book{
+  infix fun on(place:String) {...}
+}
+Book() on "MyDesk"
+```
+
+### 印章类和枚举区别
+
+- Sealed class 更在意类型
+- 枚举更在意数据
+
 ### internal vs default
 
-- 
+## 高阶函数
+
+- maxby
+- filter
+- map
+- any
+```
+列表集合.maxBy{it.height}
+列表集合.minBy{it.height}
+列表集合.filter{
+  (it.age > 18 ) and (it.height > 168)
+}
+列表集合.map {
+  "${it.name} : ${it.age}"
+}
+
+// return boolean
+列表集合.any {
+  it.age == 18
+}
+
+列表集合.count {
+  it.age < 25
+}
+
+// return first object
+列表集合.find {
+  it.age == 25
+}
+
+列表集合.groupBy {
+  it.address
+}.get("广东")?.forEach{ println(it) }
+
+```
+
+## DSL(领域特定语言)
+
+### 扩展函数
+
+```
+fun List<Girl>.查找年龄小于(age: Int) {
+  filter {
+    it.age < age
+  }.forEach(::println)
+}
+
+listArr.查找年龄小于(18)
+
+infix fun List<Girl>.查找年龄小于(age: Int) {
+  filter {
+    it.age < age
+  }.forEach(::println)
+}
+
+// 特定领域语言
+listArr 查找年龄小于 18
+```
+
+## Application and Libaray
+
+- Application 作为应用程序启动：`apply plugin: 'com.android.application'`
+- Library 作为库工程被引用：`apply plugin: 'com.android.library'`
+
+### 两套 AndroidManifest
+
+- 一套用于Application时使用，配置主题及默认启动，位于debug目录
+- 一套用于Library时使用注册组件及权限，位于release目录
+
+### AndroidManifest切换
+
+```
+sourceSets {
+  main {
+    if (xxx.toBoolean()) {
+      manifest.srcFile 'src/main/release/AndroidManifest.xml'
+    } else {
+      manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+    }
+  }
+}
+```
