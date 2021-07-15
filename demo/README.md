@@ -492,6 +492,44 @@ class Book{
 Book() on "MyDesk"
 ```
 
+## 继承（实现）语法
+
+- 弗雷需要 `open`才可以被继承
+- 父类方法、属性需要`open`才可以被覆写
+- 接口、接口方法、抽象类默认为 `open`
+- 覆写父类（接口）成员需要 `override` 关键字
+- class D:A(), B,C
+- 继承类时实际上调用了父类的构造方法
+- 类只能单继承，接口可以多实现
+
+## 接口代理
+
+- class Manager(dirver:Driver): Driver by driver
+- 接口方法实现交给代理类实现
+
+### 接口方法冲突
+
+- 接口方法可以有默认实现
+- 签名一致且返回值相同的冲突
+- 子类（实现类）必须覆写冲突方法
+- `super<[父类(接口)名]>.[方法名]([参数列表])`
+
+### object
+
+- 只有一个实例的类
+- 不能自定义构造方法
+- 可以实现接口、继承父类
+- 本质上就是单例模式最基本的实现
+
+
+### 伴生对象与静态成员
+
+- 每个类可以对应一个伴生对象
+- 伴生对象的成员全局独一份
+- 伴生对象的成员类似 Java 的静态成员
+- 静态成员考虑包级函数、变量替代
+- JvmField and JvmStatic 的使用
+
 ### 印章类和枚举区别
 
 - Sealed class 更在意类型
@@ -581,3 +619,73 @@ sourceSets {
   }
 }
 ```
+
+## android-extendsion
+
+- 视图绑定，可直接使用XML中ID操作该控件
+- 插件级别，无需引入第三放库
+- 无需定义变量，极大的减少代码
+- 适用于Activity, Fragament, Adapter及自定义 View
+
+插件：apply plugin: 'kotlin-andorid-extentions'
+
+
+## Anko
+
+- Anko Commons
+- Anko Layouts
+- Anko SQLite
+- Anko Coroutines
+
+### Anko Commons 配置
+
+- 依赖包：compile "org.jetbrains.anko:anko-commons:$anko_version"
+- v4依赖包：compile "org.jetbrains.anko:anko-commons:$anko_version"
+
+### Anko Commons 使用
+
+- 跳转类：startActivity, intent 等
+- 提示类：toast, dialog 等
+- 日志类：verbose(), debug(), info(), warn(), error()
+- 尺寸类：dip(), sp(), px2dp(), px2sp(), dimen()
+
+### Anko Layouts 配置
+
+- 依赖包：compile "org.jetbrains.anko:anko-sdk25:$anko_version"
+- v7依赖包：compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+- 事件依赖包：compile "org.jetbrains.anko:anko-sdk25-coroutines:$anko_version"
+- v7事件依赖包：compile "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
+
+### Anko Layouts 使用
+
+```
+verticalLayout {
+  padding = dip(30)
+  editTtext {
+    hint = "Name"
+    textSize = 24f
+  }
+  editText {
+    hint = "Password"
+    textSize = 24f
+  }
+  button("Login") {
+    textSize = 26f
+    onClick { toast("Hello") }
+  }
+}
+```
+
+### Anko SQLite
+
+- 配置：
+  - 依赖包：compile "org.jetbrains.anko:anko-sqlite:$anko_version"
+- 使用
+  - 第三方库替代，如OrmLite, LitePal, GreenDao, Realm等
+  
+### Anko Coroutines
+
+- 配置
+  - 依赖包: compile "org.jetbrains.anko:anko-coroutines:$anko_version"
+- 使用
+  - 第三方库替代，如rx
