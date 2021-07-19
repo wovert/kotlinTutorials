@@ -139,6 +139,42 @@
   - 工程依赖配置 -> 找哪些工程依赖
   - 任务管理 -> 如何构建
 
+### Gradle 更新问题
+
+> 项目Gradle和工具Gradle版本不一致容易出问题
+
+- Error: Unable to tunnel through proxy. Proxy returns "HTTP/1.1 400 Bad Request"
+  - 第一种方案：File -> Settings -> Build Execution, Deployment Gradle ->  默认选择了 Use default gradle wrapper(recommended)
+选择 Use local gradle distribution 本地Anroid Studio安装路径的gradle
+  - 第二种方案：第一种方案还是没有解决时，选择项目的gradle/wrapper/gradle-wrapper.properties, distributionUrl的地址当前工具的版本路径不一样，改成当前工具版本路径
+  - 第三种方案：项目根路径下的 build.gradle classpath 'com.android.tools.build:gradle:1.3.0' 的版本号与工具版本号一致就可以
+- gradle 一致处于更新状态
+  - 第一种方案. 项目gradle低于工具gradle版本号时，/Android Studio 4/gradle/gradle-4.1记住这个版本号，在项目根目录gradle/wrapper/gradle-wrapper.properties 文件中 distributionUrl的地址的版本号改成gradle-4.1就可以了
+  - 第二种方案. 手动下载 gradle 版本，并放置在 Android Studio4/grandle/目录下
+  - 第三种方案. 在项目根目录gradle/wrapper/gradle-wrapper.properties 文件中 distributionUrl的https改成http
+- Gralde project sync failed ... gradle同步失败
+  - 查看SDK版本存不存在（AppData/Local/Android/Sdk/platforms/android-XX）, 模块目录下 build.gradle compileSdkVersion 24改成其他的27，
+  buildToolsVesion "27.0.1", compile 'com.andorid.support:appcompat-v7:27.1.1.'
+
+### 项目导入差生中文乱码问题
+
+- settings->File Encodings
+  - IDE Encoding
+  - Project Encoding
+  - File or Directory Encoding 和 Property File Encoding
+- 单个 java 右键 File Encoding
+- build.gradle ```
+android {
+  ...
+  buildTypes{}
+  compileOptions {
+    encoding "GBK"
+  }
+}
+```
+- Module 的 gradle 中添加：`compileOption.encoding="GBK"`
+
+
 ## 变量
 
 ### 声明变量
@@ -152,6 +188,11 @@ val flag:Datatype = "value"
 
 - `val`: 只读变量
 - `var`: 读写变量
+
+### 常量
+
+- 编译时常量：const val 常量
+- 运行时常量：val 常量
 
 ### 类型自动推导
 
@@ -492,6 +533,87 @@ class Book{
 Book() on "MyDesk"
 ```
 
+### 面向对象五个基本原则(SOLID)
+
+- SRP 单一责任原则
+- OCP 开放封闭原则
+- LSP 里氏替换原则
+- DIP 依赖倒置原则
+- ISP 接口分类原则
+
+### Java 继承实力化顺序
+
+- 父类静态成员，子类静态成员
+- 父类对象构造：属性（赋值）、构造代码块、构造方法
+- 子类对象构造：属性（赋值）、构造代码块、构造方法
+
+### Java 多态
+
+- 编译时多态
+  - 设计时多态
+  - 方法重载
+- 运行时多态
+  - 程序运行时动态决定用哪个方法
+  
+## Java 接口
+
+- default: 默认方法，可以带方法体 jdk1.8后新增
+- static: 静态方法，可以带方法体 jdk1.8后新增
+
+## Java内部类
+
+- 成员内部类
+  - 内部类在外部使用时，无法直接实例化，需要借由外部类信息才能完成实例化
+- 静态内部类
+  - 静态内部类中，只能直接访问外部类的静态成员，如果需要调用非静态成员，可以通过对象实例
+  - 静态内部类对象实例时，可以不依赖于外部类对象
+  - 可以通过外部类.内部类.静态成员的方法，访问内部类中的静态成员
+  - 当内部类属性与外部类属性同名时，默认直接调用内部类中的成员；如果需要访问外部类中的非静态属性，则可以通过 new 外部类().属性的方法
+  
+```java
+Person.Heart h = new Person().new Heart()
+
+Person.Heart ms = new Person.Heart()
+```
+
+### 方法内部类
+
+- 作用访问在方法内
+- class 前不可以添加修饰符
+- 类中不能包含静态成员
+- 类中可以包好 final, abstract 修饰成员
+
+### 匿名内部类
+
+- 匿名内部类没有类型名称、实例对象名称
+- 编译后的文件命名：外部类$数字.class
+- 无法使用 private、public、protectec、abstract、static 修饰
+- 无法编写构造方法，可以添加构造代码块
+- 不能出现静态成员
+- 匿名内部类可以实现接口也可以继承父类，但是不可兼得
+
+
+## 方法重载
+
+- Overloads
+- 名称相同、参数不同的方法
+- Jvm函数签名的概念：函数名、参数列表
+- 根返回值没有关系
+
+### 默认参数
+
+- 为函数参数设定一个默认值
+- 可以为任意位置的参数设置默认值
+- 函数调用产生混淆时用具名参数
+
+### 方法虫重载默认参数
+
+- 二者的型惯性以及@JvmOverloads
+- 避免定义关系不大的重载
+- 不好的设计
+  - List.remove(int)
+  - List.remove(Object)
+
 ## 继承（实现）语法
 
 - 弗雷需要 `open`才可以被继承
@@ -689,3 +811,16 @@ verticalLayout {
   - 依赖包: compile "org.jetbrains.anko:anko-coroutines:$anko_version"
 - 使用
   - 第三方库替代，如rx
+
+## RxKotlin
+
+- 基于RxJava的扩展库，以Kkotlin的风格提供大量的扩展方法
+- 响应式编程
+- 观察者模式
+- 配置: `compile "io.reactivex:rxkotlin:${rx_kotlin_version}"`
+
+## RxAndroid
+
+- 基于RxJava的扩展库，可以优雅的处理异步请求
+- 更好的兼容Android特性、如主线程、UI事件
+- 配置: `compile "io.reactivex:rxandroid:${rx_android_version}"`
