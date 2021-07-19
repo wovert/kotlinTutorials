@@ -163,7 +163,8 @@
   - Project Encoding
   - File or Directory Encoding 和 Property File Encoding
 - 单个 java 右键 File Encoding
-- build.gradle ```
+- build.gradle
+```
 android {
   ...
   buildTypes{}
@@ -404,6 +405,8 @@ val length = nullable.length // 可能触发空指针，编译错误
 - Lambda只有一个参数可以默认为 `it`
 - 入参，返回值与形式参数一致的函数可以用函数引用的方式作为实参传入
 
+## 内敛函数
+
 ## 类
 
 
@@ -624,6 +627,20 @@ Person.Heart ms = new Person.Heart()
 - 继承类时实际上调用了父类的构造方法
 - 类只能单继承，接口可以多实现
 
+## 扩展成员
+
+- 为现有的类添加方法、属性
+  - fun X.y(): Z {...}
+  val X.m 注意扩展属性不能初始化，类似接口属性
+- Java 调用扩展成员类似调用静态方法
+
+## 属性代理
+
+- 定义方法
+  - val/var <property name>:<Type> by <expression>
+- 代理者需要实现相应的 setValue/getValue 方法
+- lazy 原理剖析
+
 ## 接口代理
 
 - class Manager(dirver:Driver): Driver by driver
@@ -824,3 +841,34 @@ verticalLayout {
 - 基于RxJava的扩展库，可以优雅的处理异步请求
 - 更好的兼容Android特性、如主线程、UI事件
 - 配置: `compile "io.reactivex:rxandroid:${rx_android_version}"`
+
+
+## ProgressBar
+
+- Android 4.0 以后不能直接在线程中操作控件，除了ProgressBar控件
+
+```
+final ProgressBard progress = findViewById(R.id.progress);
+progress.setProgress(80);
+new Thread(){
+  @Override
+  public void run() {
+    for (int i=1; i<=100; i++) {
+      progress.setProgress(i);
+      try {
+        Thread.sleep(30);
+      } catch(InterruptedException e) {
+        e.printStatckTrace();
+      }
+    }
+  }
+}.start()
+```
+
+## Activity 启动模式
+
+- standard(入栈出栈)
+- singleTop(顶部复用, 顶部的跳转到顶部的时候没有变化， ABC, 再打开C，还是ABC, 如果打开B，变成ABCB)
+- singleTask(ABCDE -> 跳转到C，变成 AB stack，去掉D)
+- singleInstance(ABCD statck -> 打开 E 变成 ABCD statck 和 E statck 独栈)
+
