@@ -405,10 +405,73 @@ val length = nullable.length // 可能触发空指针，编译错误
 - Lambda只有一个参数可以默认为 `it`
 - 入参，返回值与形式参数一致的函数可以用函数引用的方式作为实参传入
 
-## 内敛函数
+## 内联函数
+
+```kt
+val ints = intArrayOf(1,2,3,4);
+ints.forEach{
+  println("Hello $it")
+}
+for (element in ints) {
+  println("Hello $element")
+}
+
+inline fun IntArray.forEach(action:(Int) -> Unit): Unit {
+  for(element in this) action(element)
+}
+
+```
+
+### 定义内联函数
+
+```kt
+inline fun hello() {
+  println("hello")
+}
+
+
+// 高阶函数与内联更配
+inline fun cost(block: () -> Unit) {
+  val start = System.currentTimeMillis()
+  block()
+  println(System.currentTimeMillis() - start))
+}
+
+cost {
+  println("Hello")
+}
+
+val start = System.currentTimeMillis()
+println("hello")
+println(System.currentTimeMillis() - start))
+
+```
+- 高阶函数内联
+  - 1.函数本身被内联到调用出
+  - 2.函数的函数参数被内联到调用处
+  
+### 内联属性
+
+- 没有backing-field的属性的 getter/setter可以被内联
+
+### 内联函数的限制
+
+- public/protected 内联方法只能访问对应类的 public 成员
+- 内联函数的内联函数参数不能被存储（赋值给变量）
+- 内联函数的内联函数参数只能传递给其他内联函数参数
 
 ## 类
 
+
+## IM 第三方服务平台
+
+- 环信
+- 融云
+- 网易云信
+- 极光IM
+- 腾讯云通信IM
+- 爱萌
+- 阿里百川云旺
 
 ### 构造器
 
@@ -871,4 +934,171 @@ new Thread(){
 - singleTop(顶部复用, 顶部的跳转到顶部的时候没有变化， ABC, 再打开C，还是ABC, 如果打开B，变成ABCB)
 - singleTask(ABCDE -> 跳转到C，变成 AB stack，去掉D)
 - singleInstance(ABCD statck -> 打开 E 变成 ABCD statck 和 E statck 独栈)
+
+## Activity 生命周期
+
+- 1. onCreate()
+- 2. onStart() 能看见，不能交互
+- 3. onResume() 能交互
+- 4. onPause() ---(User returns to the activity， Dialog Activity)---> onResume()
+- 5. onStop()
+  - User navigates to the activity(), -> onRestart()
+  - App process killed, -> onCreate()
+- 6. onDestory()
+
+
+## Fragment
+
+> 解决不同设备的分辨率适配问题
+
+- Android 3.0+以后
+- 一个Activity可以运行多个 Fragment
+- Fragment不能脱离Activity而存在
+- Activity是屏幕的主体，而Fragment是Activity的一个组成元素
+
+- created vs onAttach()/onCreate()/onCreateView()/onActivityCreated()
+- Destoryed vs onDestroyView()/onDestory()/onDetach()
+
+### 静态加载 VS 动态加载
+
+- 静态加载 xml
+
+## java vs kotlin
+
+- build.gradle
+  - sourceSets {  main.java.srcDirs += "src/main/kotlin" }
+  
+## collection
+
+### List(列表)
+
+- List元素有序并且可以重复的集合，成为序列
+- List可以精确的控制每个元素的插入位置，或删除某个位置的元素
+- List的两个主要实现类是 ArrayList 和 LinkedList
+
+### ArrayList
+
+- 底层数组实现
+- 动态增长，以满足应用程序的需求
+- 在列表尾部插入或删除数据非常有效
+- 适合查找和更新元素
+- ArrayList中的元素可以为null
+
+
+## Intent
+
+> 不同组建之间通信的媒介，媒介中含有一次操作的动作、动作设计的数据、附加数据进行描述并完成组件的调用
+
+### Intent属性
+
+- Action
+- Data
+- Category
+- Type
+- Component
+- Extra
+
+## API28(Android 9.0) 新特性
+
+1. 9.0对 http 请求的限制
+2. 创建安全配置文件
+  - 1. 在 res 目录下创建 xml/network_security_config 文件
+  - 2. 增加 `cleartextTrafficPermitted` 属性
+3. 添加安全配置文件
+  - 1. AndroidManifest.xml 中的 Application 申明
+
+## ListView
+
+1. 在Layout中创建ListView
+2. 创建每一行的layout
+3. 创建每一行的数据
+4. 用adapter 将数据填充到每一行的视图中
+
+## 泛型
+
+- 函数声明泛型：`fun <T> maxOf(a:T, b:T):T`
+- 类声明泛型：`sealed class List<T>`
+
+### 使用泛型
+
+```kt
+val max:String = maxOf<String>("Hello", "world");
+val max = maxOf("Hello", "world");
+val list: List.Cons<Double> = List.Cons<Double>(1.0, List.Nil)
+val list =  List.Cons(1.0, List.Nil)
+```
+
+## ASCII
+
+- 48 - '0'
+- 64 - 'A'
+- 97 - 'a'
+
+## RecyclerView
+
+- LayoutManager
+  - LinearLayoutManager
+  - GridLayoutManger
+  - StaggeredGridLayoutManager
+- Adapter
+- ViewHolder
+
+- buide.gradle
+```
+// noinspection GradleCompatible
+implementation 'com.android.support:appcompat-v7:28.0.0'
+implementation 'com.android.support:recyclerview-v7:28.0.0'
+```
+
+## Android 数据存储
+
+- SharedPreferences 存储数据
+- 文件存储（内部，外部）
+- SQLite 数据库存储
+- ContentProvider 存储数据
+- 网络存储数据
+
+### SharedPreferences 存储数据
+
+- 存放登录的配置信息
+- 本质上是 xml 文件，是通过类似键值对的方式存放信息
+- 位于程序私有目录中，即data/data/[packageName]/shared_prefs
+
+### SharedPreferences 操作模式
+
+- MODE_APPEND: 追加方式存储
+- MODE_PRIVATE: 私有方式存储，其他应用无法访问
+- MODE_WORLD_READABLE: 可被其他应用读取
+- MODE_WORLD_WRITEABLE: 可被其他应用写入
+
+### 外部存储 ExternalStorage
+
+- 内存 Memory
+- 内部存储 InternalStorage
+- 外部存储 ExternalStorage
+  - storage or mnt目录
+  - Environment.getExternalStorageDirectory()
+  - 共有目录(DCIM、DOWNLOAD等)
+  - 私有目录(Android/data/应用包名)
+
+## Retrofit
+
+- 基于okhttp封装的网络库
+- 与Rx完美结合
+
+### Retrofit配置
+
+```
+ext.ok_http_version = '3.14.9'
+ext.retrofit_version = '2.6.4'
+```
+
+build.gradle
+```
+compile "com.squareup.okhttp3:okhttp:${ok_http_version}"
+compile "com.squareup.retrofit2:retrofit:${retrofit_version}"
+compile "com.squareup.okhttp3:logging-interceptor:${ok_http_version}"
+compile "com.squareup.retrofit2:converter-gson:${retrofit_version}"
+compile "com.squareup.retrofit2:adapter-rxjava:${retrofit_version}"
+```
 
