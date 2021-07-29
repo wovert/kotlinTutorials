@@ -968,7 +968,14 @@ new Thread(){
 - build.gradle
   - sourceSets {  main.java.srcDirs += "src/main/kotlin" }
   
-## collection
+## collection接口
+
+- 单列集合中共性的方法
+- 没有带索引的方法
+
+- 子类
+  - List接口
+  - Set接口
 
 ### List(列表)
 
@@ -983,6 +990,37 @@ new Thread(){
 - 在列表尾部插入或删除数据非常有效
 - 适合查找和更新元素
 - ArrayList中的元素可以为null
+
+### List接口
+
+
+- 有序集合
+- 允许存储重复的元素
+- 有索引
+
+- Verctor集合
+- ArrayList集合
+- LinkedList集合
+
+### Set接口
+
+- 不允许存储重复元素
+- 没有索引
+
+- TreeSet集合
+- HashSet集合
+- LinkedHashSet集合
+
+## 泛型
+
+> 一种未知的数据类型；是一个变量，用来接受数据类型
+
+- E e: Element元素
+- T t: Type 类型
+
+### 
+
+
 
 
 ## Intent
