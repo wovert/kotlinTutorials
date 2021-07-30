@@ -3,15 +3,31 @@ package net.wovert.kotlin.generic
 fun main() {
     val max = maxOf("hello", "world")
     println(max)
+
 }
 
-// 添加类型约束， T需要实现 Compareable 接口
+class A : Comparable<Int> {
+    override fun compareTo(other: Int): Int {
+        return 0
+    }
+
+}
+
+class B : Comparable<Int> {
+    override fun compareTo(other: Int): Int {
+        return 0
+    }
+
+}
+
+// 添加类型约束， (<T: Comparable <T>> : T需要实现 Compareable 接口)
 fun <T: Comparable <T>> maxOf(a: T, b:T) : T {
     return if (a > b ) a else b
 }
 
 // 多个约束
-fun <T> callMax(a:T, b:T) where T: Comparable<T>, T:() -> Unit {
+fun <T> callMax(a: T, b:T)
+    where T: Comparable<T>, T:() -> Unit {
     if (a > b) a() else b()
 }
 

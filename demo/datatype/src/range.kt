@@ -12,6 +12,9 @@ fun main(args: Array<String>) {
     val charRange2 = 'z' downTo 'a'
     val longRange2 = 100L downTo 1L // 1L until 100L
 
+    var arr = listOf<String>("hello", "world", "hello world", "welcome", "goodbye")
+    arr.filter { it.length > 5 }.map { it.toUpperCase() }.sorted().forEach { println(it) }
+
     println(intRange2.joinToString())
 //    println(longRange1.joinToString())
 //    println(floatRange.toString())

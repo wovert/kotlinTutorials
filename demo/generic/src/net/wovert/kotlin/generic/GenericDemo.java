@@ -3,6 +3,7 @@ package net.wovert.kotlin.generic;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 interface GenericInterface<I> {
     void method(I i);
@@ -17,6 +18,16 @@ class GenericMethod {
 
 public class GenericDemo implements GenericInterface<String> {
     public static void main(String[] args) {
+
+        TreeMap tm = new TreeMap();
+        tm.put(1, 1);
+        tm.put(1, 1);
+        tm.put(6, 6);
+        tm.put(5, 5);
+
+
+        System.out.println(tm.toString());
+
         GenericMethod gm = new GenericMethod();
         gm.method(300, "Hello World");
 
