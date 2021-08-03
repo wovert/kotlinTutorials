@@ -1,32 +1,31 @@
-fun main() {
-  cost {
-      var fibonacciNext = fibonacci()
-      for (i in 0..10) {
-          println(fibonacciNext())
-      }
-  }
-    //region +折叠
-    println("Hello World!")
-    //endregion
-}
+import java.io.File
 
-inline fun cost(block: () -> Unit) {
-    val start = System.currentTimeMillis()
-    block()
-    println(System.currentTimeMillis() - start)
-}
+class Person(var name: String, var age: Int)
 
-fun fibonacci(): () -> Long {
-    var first = 0L
-    var second = 1L
-    return {
-        val next = first + second
-        val current = first
-        first = second
-        second = next
-        current
+fun main(args: Array<String>) {
+    val person = Person("张三", 20)
+
+    person.let {
+        // it = person
+        println(it)
     }
+    person.let(::println)
+
+    person.run {
+        // this = person
+        println(this)
+    }
+    person.run(::println)
+
+    val person2 = person.also {
+        it.name = "李四"
+    }
+    var person3 = person.apply {
+        name = "王五"
+    }
+
+    File("string.kt").inputStream().reader().buffered()
+        .use {
+            println(it.readLines())
+        }
 }
-
-
-

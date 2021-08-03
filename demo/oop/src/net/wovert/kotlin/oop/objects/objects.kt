@@ -33,3 +33,14 @@ object MusicPlayer: Player(), OnExternalDriverMountListener {
 
     }
 }
+
+// object 的构造器
+object Singleton {
+    init {
+        // 可以有若干个 init
+    }
+}
+
+fun main() {
+
+}

@@ -739,6 +739,30 @@ Person.Heart ms = new Person.Heart()
 
 ### internal vs default
 
+- 顶级声明值文件内直接定义的属性、函数、类等
+- 顶级声明不支持 `protected`
+- 顶级声明被 `private` 修饰标识文件内部可见
+
+### lateinit
+
+- lateinit 会让编译器忽略变量的初始化，不支持 Int 等基本类型
+- 开发者必须能够在完全确定变量值的生命周期下使用 lateinit
+- 不再复杂的逻辑中使用 lateinit, 它只会让代码更加脆落
+- Kotlin 1.2 加入的判断 lateinit 属性是否初始化的 API 最好不要用
+
+```kt
+private val nameView by lazy {
+  // 只有在 nameView 首次被访问时执行
+  findViewById<TextView>(R.id.nameView)
+}
+```
+
+### 代理 Delegate
+
+- 接口代理：对象 **x** 代替当前类接口 **A** 实现接口 **B** 的方法
+  - **我** 代替 **你** 处理 **它**
+- 属性代理：对象 **x** 代替属性 **a** 实现 **getter/setter** 方法
+
 ## 高阶函数
 
 - maxby
@@ -775,7 +799,69 @@ Person.Heart ms = new Person.Heart()
 
 ```
 
+- val r = X.let { x -> R}
+- val r = X.run { this: X -> R}
+- val x = X.also { x -> Unit }
+- val x = X.apply { this: X -> Unit }
+- val r = Closeable.use { c -> R }
+
 ## DSL(领域特定语言)
+
+### 匿名内部类
+
+``` Java
+new Runnable() {
+  @Override
+  public void run() {
+    ...
+  }
+}
+```
+
+``` kt
+// object 省略了名字即匿名
+object: Runnable {
+  override fun run() {
+     ...
+  }
+}
+
+// 匿名内部类可继承父类或实现多个接口
+// Cloneable & Runnable = 交叉类型
+var runnableCloneable = object: Cloneable, Runnable {
+  override fun run() {
+     ...
+  }
+}
+```
+
+### 本地类
+
+``` java
+public static void main() {
+  ...
+  class LocalClass implements Cloneable, Runnable {
+    ...
+  }
+}
+```
+
+``` kt
+fun main() {
+  class LocalClass: Cloneable, Runnable {
+     ...
+  }
+}
+```
+
+### 本地函数
+
+``` kt
+
+fun main() {
+  fun localFunc() {}
+}
+```
 
 ### 扩展函数
 
@@ -1011,6 +1097,48 @@ new Thread(){
 - HashSet集合
 - LinkedHashSet集合
 
+### HahsSet
+
+- JDK 1.8版本之前，哈希表=数组+链表
+- JDK 1.8版本之后，哈希表=数组+红黑树（提高查询的速度），查询速度快
+  - 如果链表的长度超过了8个，数据结构转为红黑树结构
+  
+- 哈希值：十进制整数，由系统随机给出（就是对象的地址值，是一个逻辑地址，是模拟出来得到地址，而不是数据实际存储的物理地址）
+  - 在Object类中 hashCode() 方法 返回对象的哈希值
+
+- set.add(s2)
+  - 1. add方法会调用s2的hashCode方法计算出字符串"abc"的哈希值，哈希值是96354
+  - 2. 在集合中找有没有96354这个哈希值的元素，发现有（哈希冲突）
+  - 3. s2会调用equals方法和哈希值相同的元素进行比较s2.equals(s1),返回true
+  - 4. 两个元素的哈希值相同，equals方法返回true, 认定两个元素相同
+  - 5. 不会把s1存储
+
+- Set 集合存储元素不重复的元素，前提：存储的元素必须重写 hashCode 方法和 equal 方法
+
+### LinkedHashSet
+
+> 底层是一个哈希表（数组+链表/红黑树）+ 链表：多了一条链表（记录元素的存储顺序），保证元素有序
+
+### Map
+
+1. 双列集合，key/value结构；
+2. key/value数据类型可以相同，也可以不同；
+3. key是不允许重复的，value是可以重复的；
+4. key/value一一对应；
+
+- java.util.HashMap<K,V> 集合 implements Map<K, V>接口
+- HashMap集合底层是哈希表：查询的速度特别快
+  - JDK 1.8 之前：数组+单项链表；
+  - JDK 1.8 之后：数组+单项链表/红黑树（链表的长度超过8）；提高查询的速度；
+  - 无序集合，存储元素和取出元素的顺序有可能不一致；
+- LinkedHashMap<K, V>集合 extends HashMa<k,v>集合
+  - 底层是哈希表+链表（保证迭代的顺序）
+  - 有序的集合，存储元素和取出元素的顺序是一致的；
+  
+- public V remove(Object key)
+  - key 存在，返回被删除的值
+  - key 不存在，返回 null
+
 ## 泛型
 
 > 一种未知的数据类型；是一个变量，用来接受数据类型
@@ -1139,4 +1267,75 @@ compile "com.squareup.okhttp3:logging-interceptor:${ok_http_version}"
 compile "com.squareup.retrofit2:converter-gson:${retrofit_version}"
 compile "com.squareup.retrofit2:adapter-rxjava:${retrofit_version}"
 ```
+
+## 密封类
+
+- 子类可数
+  - < v1.1 子类必须定义为密封类的内部类
+  - v 1.1 子类只需要与密封类在同一个文件中
+
+## 数据类
+
+DataClass
+
+- JavaBean vs data class
+- 构造方法：默认无参构造 : 属性作为参数
+- 字段：字段私有，Getter/Setter公开 : 属性
+- 继承性：可继承也可被继承 : 不可被继承
+- component: 无 : 相等性、解构等
+
+- data class
+  - Java Bean
+  - Component
+    - 主构造器
+    - 相等性
+    - 解构
+  - final
+
+``` kt
+// 合理使用 data class
+data class Book(val id: Long, 
+  val name: String,
+  val author: Person) // val 不可变 
+```
+
+- data class（作为 Java Bean 使用）
+  - Java Bean
+  - Component
+    - 主构造器(X) => NoArg 插件
+    - 相等性
+    - 解构
+  - final(X) =》 AllOpen 插件
+
+```
+dependencies {
+  classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
+  classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+}
+
+apply plugin: 'kotlin-noarg'
+apply plugin: 'kotlin-allopen'
+
+noArg {
+  // 默认 false, 不会执行 init(){}方法
+  invokeInitalizers = true
+  annotation("net.wovert.kotlin.oop.annotations.PoKo")
+}
+
+allOpen {
+  annotation("net.wovert.kotlin.oop.annotations.PoKo")
+}
+
+annotation class Poko
+
+@PoKo
+data class Book(val id: Long, 
+  val name: String,
+  val author: Person) {}
+
+```
+
+## okio
+
+com.squareup.okio:okio:1.12.0
 
