@@ -765,6 +765,10 @@ private val nameView by lazy {
 
 ## 高阶函数
 
+- 传入或者返回函数的函数
+- 函数引用 ::println
+- 带有 Receiver 的引用 pdfPrinter::println
+
 - maxby
 - filter
 - map
@@ -1146,9 +1150,77 @@ new Thread(){
 - E e: Element元素
 - T t: Type 类型
 
-### 
+### 协变与逆变
+
+- 协变：List<? extends Object> list ... 泛型是Object或Object子类
+- 逆变：List<? super String> list ... 泛型是String或String的父类
+
+如果从中读取数据，而不往里面写入内容，这样的对象叫做生产者；? extend E
+只向里面写入数据，而不从汇总读取数据，这样的数据叫做消费者； ? super E
+
+PECS: Producer Extends, Consumer Super
+
+- Kotlin 中的 out 关键字叫做 variance annotation，因为它是在类型参数声明处所指定的，称之为声明处协变（declaration-site variance）
+- Java 来说则是使用处协变 (use-site variance)，其中类型通配符使得类型协变成为可能
+
+如果范性类仅仅将泛型作为其方法的输出类型，可以使用out
+produce = output = out
+
+### 换行符
+
+- windows: \r\n
+- Linux: /n
+- Mac: /r
+
+## 异常
+
+- java.lang.Throwable 是 Java语言中所有错误或异常超类。
+  - Exception 编译期异常，进行编译
+  - RuntimeException 运行期异常
+- Error 错误（必须修改源代码，程序才能继续执行）
+
+### 自定义异常
+
+- 继承 Exception 编译期异常，方法内抛出了编译期异常，必须处理这个异常，要么 throws, 要么 try...catch
+- 继承 RuntimeException 运行期异常，无序处理，交给虚拟机处理（中断处理）
+
+## 线程
+
+### 线程的创建
+
+- 创建一个 Thread 类，或者一个Thread子类的对象
+- 创建一个实现 Runnable 接口的类的对象
+
+## IO字节流
+
+- Input: 输入，把硬盘中的数据，读取到内存中使用
+- Output: 写入，把内存中的数据，写入到硬盘中保存
+
+### 字节缓冲输入流
+
+- 给基本的字节输入流增加一个缓冲区（数组）提高基本的字节输入流的读取效率
 
 
+
+## Java Socket
+
+- accept 获取客户端对象
+- 客户端和服务端使用IO流对象进行交互
+
+**套接字**: IP地址和端口号的网络单位
+
+### 客户端获取通信步骤
+
+1. 创建一个客户端对象 Socket, 构造方法绑定服务器的 IP地址和端口号；
+2. 使用 Socket 对象中的方法 getOutputStream() 获取网络字节输出流 OutputStream 对象；
+3. 使用网络字节输出流 OutputStream 对象中的方法 write，给服务器发送数据；
+4. 使用 Socket 对象中的方法 getInutStream() 获取网络字节流 inputStream 对象;
+5. 使用网络字节输入流 InputStream 对象中的方法 read, 读取服务器回写的数据；
+6. 释放资源(Socket);
+
+- 客户端与服务器端进行交互，必须使用 Socket 中提供的网络流，不能使用自己创建的流对象；
+- 当我们创建客户端对象 Socket 的时候，就会去请求服务器和服务器经过3次握手建立连接同路，
+这时服务器没有启动，则回抛出异常；如果已经启动，就可以交互了。
 
 
 ## Intent
@@ -1276,6 +1348,25 @@ compile "com.squareup.retrofit2:adapter-rxjava:${retrofit_version}"
 
 ## 数据类
 
+1. 主构造方法至少要有一个参数；
+2. 所有的主构造方法参数都需要被标记为 var 或 val
+3. 数据类不能是抽象的、open、sealed 的以及 inner
+
+对于数据类，编译器会自动生成如下内容：
+
+1. equals/hashCode
+2. toString，形式为 Person(name=..., age=..., ...=...)
+3. 针对属性 componentN 方法，并且是按照属性的声明顺序来生成的
+
+数据类成员的继承要点：
+
+1. 如果数据类中显示定义了 equals, hashCode 或 toString 方法，或是在数据类的父类中将这些方法声明为了 final,
+   那么这些方法就不会再生成，转二使用已有的；
+2. 如果父类有 componentN 方法，并且是 open 的以及返回兼容的类型，那么编译器就会在数据类中生成相应的 componentN 方法，
+   并且重写弗雷的这些方法；如果父类中的这些方法由于不兼容的签名或是被定义为 final 的，那么编译器就会报错
+3. 在数据类中显示提供 componentN 方法以及 copy 方法实现是不允许的
+
+
 DataClass
 
 - JavaBean vs data class
@@ -1334,6 +1425,37 @@ data class Book(val id: Long,
   val author: Person) {}
 
 ```
+
+## Java Lambda
+
+- Lambda 必须具有接口，且接口中有且仅有一个抽象方法
+- Lambda 必须具有上下文推断（方法的参数或局部变量类型必须为 Lambda 对应的接口类型，才能使用 Lambada 作为该接口的实例）
+
+## 屏幕适配
+
+1. 布局适配
+2. 图片适配
+
+### 屏幕像素密度
+
+> 每英寸上的像素点数，单位是 dpi，即 "dot per inch"的缩写。屏幕像素密度于屏幕尺寸和屏幕分辨率有关。
+
+在屏幕像素密度为 160dpi的情况下，1dp=1px; 320dpi 时 1dp=2px
+
+- 1dp=(像素密度/160dpi)*1px
+- pxValue = (像素密度/160dpi)*dpValue
+
+
+### dp 的范围
+
+名称  | 像素密度范围
+---- | ------  
+mdpi(中密度, 2)  | 120dpi ~ 160dpi
+hdpi(高密度, 3)  | 160dpi ~ 240dpi
+xhdpi(超高密度, 4)  | 240dpi ~ 320dpi
+xxhdpi(超超高密度, 6)  | 320dpi ~ 480dpi
+xxxhdpi(最高密度, 8)  | 480dpi ~ 640dpi
+
 
 ## okio
 

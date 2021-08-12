@@ -17,6 +17,9 @@ fun main(args: Array<String>) {
     println("---------")
     myPrint(AA())
     myPrint(BB())
+
+    println("---------")
+    CC().foo()
 }
 
 // 扩展函数的解析是静态的
@@ -33,4 +36,21 @@ fun BB.a() = "b"
 
 fun myPrint(aa: AA) {
     println(aa.a())
+}
+
+class CC {
+    fun foo() {
+        println("CC foo")
+    }
+}
+
+fun CC.cc() {
+    println("CC extention foo")
+}
+
+fun Any?.toString() : String {
+    if (null == this) {
+        return "null"
+    }
+    return toString()
 }

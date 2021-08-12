@@ -1,9 +1,6 @@
 package net.wovert.kotlin.generic;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.*;
 
 interface GenericInterface<I> {
     void method(I i);
@@ -16,8 +13,35 @@ class GenericMethod {
 
 }
 
+class Animal {}
+class Cat extends Animal {
+
+}
+class Dog extends Animal {
+
+}
+
+
 public class GenericDemo implements GenericInterface<String> {
     public static void main(String[] args) {
+//        List<Cat> cats = new ArrayList<>();
+//        List<? extends Animal> animals = cats; // ok animals要的是Animal或Animal子类
+//        animals.add(new Cat());  // 协变只能读取，不能写入
+
+        List<Animal> animals = new ArrayList<>();
+        List<? super Animal> contravariantAnimals = animals;
+        contravariantAnimals.add(new Cat());
+        contravariantAnimals.add(new Dog());
+
+//        Animal animal = contravariantAnimals.get(0);
+
+        Object[] objs = new String[]{"Hello", "world"};
+//        objs[0] = new Object(); // error
+
+//        List<String> list = new ArrayList<String>();
+//        List<Object> list2 = list;
+//        list2.add(3);
+//        String str = list2.get(0);
 
         TreeMap tm = new TreeMap();
         tm.put(1, 1);
