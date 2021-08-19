@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/exp/exp.iml" filepath="$PROJECT_DIR$/exp/exp.iml" />
       <module fileurl="file://$PROJECT_DIR$/file/file.iml" filepath="$PROJECT_DIR$/file/file.iml" />
       <module fileurl="file://$PROJECT_DIR$/func/func.iml" filepath="$PROJECT_DIR$/func/func.iml" />
+      <module fileurl="file://$PROJECT_DIR$/function_interface/function_interface.iml" filepath="$PROJECT_DIR$/function_interface/function_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/generic/generic.iml" filepath="$PROJECT_DIR$/generic/generic.iml" />
       <module fileurl="file://$PROJECT_DIR$/helloworld/helloworld.iml" filepath="$PROJECT_DIR$/helloworld/helloworld.iml" />
       <module fileurl="file://$PROJECT_DIR$/inline/inline.iml" filepath="$PROJECT_DIR$/inline/inline.iml" />
