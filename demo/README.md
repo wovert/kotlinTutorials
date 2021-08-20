@@ -266,6 +266,14 @@ var flag: Boolean = true
 - 基本类型：IntArray, FloatArray, CharArray
 - 引用类型：Array<String>, Array<Char>, Array<Int>
 
+### 类型转换
+
+- x.toString()
+- x.toInt()
+- x.toLong()
+- x.toFloat()
+- x.toDouble()
+
 #### 数组的创建
 
 ```kt
@@ -290,12 +298,12 @@ val longRange = 1L..100L
 
 无| Kotlin  | Java
 ---- | ----- | ------  
-不可变 List  | `List<T>` | List<T>
-可变List  | `MutableList<T>` | List<T>
-不可变 Map  | `Map<K,V>` | Map<K,V>
-可变 Map  | `MutableMap<K,V>` | Map<K,V>
-不可变 Set  | `Set<T>` | Set<T>
-可变 Set  | `MutableSet<T>` | Set<T>
+不可变 List  | `listOf<T>()` | List<T>
+可变List  | `mutableListOf<T>(), arrayListOf<T>()` | List<T>
+不可变 Map  | `mapOf<K,V>()` | Map<K,V>
+可变 Map  | `mutableMapOf<K,V>(), arrayMapOf<K, V>()` | Map<K,V>
+不可变 Set  | `setOf<T>()` | Set<T>
+可变 Set  | `mutableSet<T>(), arraySetOf<T>()` | Set<T>
 
 ### 集合实现类复用与类型别名
 
@@ -808,6 +816,8 @@ private val nameView by lazy {
 - val x = X.also { x -> Unit }
 - val x = X.apply { this: X -> Unit }
 - val r = Closeable.use { c -> R }
+
+run 函数返回的以闭包形式返回最后一行代码的值，而 apply 函数的返回的是传入对象的本身
 
 ## DSL(领域特定语言)
 

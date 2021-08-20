@@ -3,6 +3,9 @@ fun main(args: Array<String>) {
     name = "xiuhong中国"
     println("My name is " + name)
 
+    val char:Char = name[0]
+    println(char)
+
     // 字符串模版
     var content = """
         <!doctype html>
