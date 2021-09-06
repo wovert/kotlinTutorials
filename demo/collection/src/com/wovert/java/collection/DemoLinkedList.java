@@ -37,8 +37,5 @@ public class DemoLinkedList {
         System.out.println(removeLast);
         System.out.println(ll);
         System.out.println("--------");
-
-
-
     }
 }

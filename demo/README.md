@@ -1201,6 +1201,25 @@ produce = output = out
 - 创建一个 Thread 类，或者一个Thread子类的对象
 - 创建一个实现 Runnable 接口的类的对象
 
+### 线程的生命周期
+
+![线程的生命周期](./imgs/threadState.png)
+
+
+### 线程的优先级
+
+- 10个优先级，用整数1-10标识，超过范围会抛出异常
+- 主线程默认优先级为 5
+- 数值越大优先级越高
+
+- 优先级常量
+  - MAX_PRIORITY: 线程的最高优先级 10
+  - MIN_PRIORITY: 线程的最低优先级 1
+  - NORM_PRIORITY: 线程的默认优先级 5
+
+- 获取线程优先级：int getPriority()
+- 设置线程优先级：void setPriority(int newPriority)
+
 ## IO字节流
 
 - Input: 输入，把硬盘中的数据，读取到内存中使用
