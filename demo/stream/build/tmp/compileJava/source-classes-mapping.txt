@@ -17,3 +17,5 @@ DemoInputStream.java
  DemoInputStream
 DemoPrintStream.java
  DemoPrintStream
+DemoStream.java
+ DemoStream
