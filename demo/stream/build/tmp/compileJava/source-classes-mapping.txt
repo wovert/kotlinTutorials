@@ -19,3 +19,5 @@ DemoPrintStream.java
  DemoPrintStream
 DemoStream.java
  DemoStream
+DemoStreamMethod.java
+ DemoStreamMethod
